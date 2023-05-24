@@ -5,12 +5,12 @@ bio_PII (Biology Parallel Integral Image) is a Python package for performing sli
 To cite this package, cite our [IEEE CIBCB 2023 short paper](TODO). 
 
 
-This code and package is under the MIT License copyright (c) Seth Ockerman
+This code and package is under the MIT License - copyright (c) Seth Ockerman
 
 The package name is prounounced bio-pie-squared :)
 
 ## Performance Numbers
-We tested our methods to determine its performance relative to past methods. We created a C++ SWA (refered to as DP-Naive) script which used dynamic programming to reduce the number of additions needed to be performed. DP-Naive SWA was already 400x faster than a naive approach (a simple 4 for loop approach) on small images, and is used as the baseline for comparision to our bio-PII methods. 
+We tested our methods to determine its performance relative to past methods. We created a C++ SWA (refered to as DP-Naive) script which used dynamic programming to reduce the number of additions needed to be performed. DP-Naive SWA was already 400x faster than a naive approach (a simple 4 for loop approach) on small images and is used as the baseline for comparision to our bio-PII methods. 
 
 |                   | 30k by 30k | 30k by 30k Speedup | 40k by 50k | 40k by 50k Speedup | 50k by 65k | 50k by 60k Speedup |
 |-------------------|------------|--------------------|------------|--------------------|------------|--------------------|
