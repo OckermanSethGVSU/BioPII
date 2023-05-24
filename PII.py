@@ -16,27 +16,28 @@ import time
 class PII:
 
     @staticmethod
-    def SWA(image: np.ndarray, windowSize: int, analysisType: str, subImageSize: int = None, GPU: bool = False):
+    def SWA(image: np.ndarray, windowSize: int, algorithm: str, subImageSize: int = None, GPU: bool = False):
         """
         Performs sliding window analysis on a 2d numpy array
 
         Args:
-            image (np.ndarray): The 2D numpy array of the image to be analayzed 
-            analysisType (str): The type of analysis to perform on the image - currently only sum is supported
-            subImageSize (int): In the event that the target image is too big to proccess at once (either by the CPU or GPU),
+            image (np.ndarray): The 2D numpy array of the image to be analyzed 
+            windowSize (int): The size of the window for SWA as an int
+            algorithm (str): The type of analysis to perform on the image - currently only sum is supported
+            subImageSize (int): In the event that the target image is too big to process at once (either by the CPU or GPU),
                                 the image should be split up into smaller sizes. This controls the size of the sub image.
                                 Defaults to none.
-            GPU (bool): Boolean which controls if the SWA makes use of your machine's GPU; Your GPU must be CUDA compataible.
+            GPU (bool): Boolean which controls if the SWA makes use of your machine's GPU; Your GPU must be CUDA compatible.
                         Defaults to False.
 
         Returns:
-            return_type: the result of applying sliding window anaylsis to the passed in image. If you did not split your
+            return_type: the result of applying sliding window analysis to the passed in image. If you did not split your
                          target image, it will be returned as a 2D numpy array. If you did, it will be returned as a list
-                         of the format [chunks, rows , cols] where chunks are the proccessed sub images, rows are the number
+                         of the format [chunks, rows , cols] where chunks are the processed sub images, rows are the number
                          of rows of results and cols are the number of cols per row of results
 
         Raises:
-            Type Error: Raised when an invalid paremeter type was passed in
+            Type Error: Raised when an invalid parameter type was passed in
             Value Error: Raised when the wrong shape of numpy array is passed in
 
         Examples:
@@ -52,26 +53,28 @@ class PII:
             raise ValueError("Invalid shape for 'image'. Expected 2D array.")
         if not isinstance(windowSize, int):
             raise TypeError("Invalid type for 'windowSize'. Expected int.")
-        if not isinstance(analysisType, str):
+        if not isinstance(algorithm, str):
             raise TypeError("Invalid type for 'analysisType'. Expected str.")
         if subImageSize is not None and not isinstance(subImageSize, int):
             raise TypeError("Invalid type for 'subImageSize'. Expected int.")
+        if subImageSize is not None and windowSize > subImageSize:
+            raise ValueError("'SubImageSize' must be greater than 'windowSize'")
         if not isinstance(GPU, bool):
             raise TypeError("Invalid type for 'GPU'. Expected bool.")
 
 
 
         if subImageSize != None:
-            return PII.__multi_image_integral_analysis(image, subImageSize, windowSize, analysisType, GPU=GPU)
+            return PII.__multi_image_integral_analysis(image, subImageSize, windowSize,  algorithm, GPU=GPU)
             
         else:
-            return PII.__single_image_integral_analysis(image, windowSize, analysisType, GPU=GPU)
+            return PII.__single_image_integral_analysis(image, windowSize, algorithm, GPU=GPU)
     
     @staticmethod
     def split_image(image: np.ndarray, chunkSize: int, windowSize: int) -> [[np.ndarray], int, int]:
         """
         Split an image into chunks for window-based analysis. Uses a special splitting method
-        to allow the chunks to be proccess in parallel and without losing any extra dimensionality
+        to allow the chunks to be process in parallel and without losing any extra dimensionality
         compared to if you had not split the image. 
 
         Args:
@@ -104,7 +107,7 @@ class PII:
         while (i * chunkSize) - (i * (windowSize - 1)) < rows :
             while (j * chunkSize) - (j * (windowSize - 1)) < cols:
                
-                # calcuate slice 
+                # calculate slice 
                 startCol = (chunkSize * j) - (j * (windowSize - 1))
                 startRow = (chunkSize * i) - (i * (windowSize - 1))
                 endRow = startRow + chunkSize
@@ -141,7 +144,7 @@ class PII:
             GPU (bool, optional): Flag indicating whether to use GPU for computation. Defaults to False.
 
         Returns:
-            A list of the proccessed chunks
+            A list of the processed chunks
         """
         if not isinstance(windowSize, int):
             raise TypeError("Invalid type for 'windowSize'. Expected int.")
@@ -327,7 +330,7 @@ class PII:
             case "sum":
                 return PII.sum(image, windowSize,GPU=GPU)
             case _:
-                raise ValueError("Please provide a valid analysis type")
+                raise ValueError("Please provide a valid analysis type \nOptions: 'sum'")
 
     @staticmethod
     def __multi_image_integral_analysis(image,chunkSize,windowSize, analysisType,GPU=False):
@@ -339,7 +342,7 @@ class PII:
                 return [PII.process_split_image("sum", windowSize,chunks,GPU=GPU),max_i,max_j]
                 
             case _:
-                raise ValueError("Please provide a valid analysis type")
+                raise ValueError("Please provide a valid analysis type \bOptions: 'sum'")
     
 
             
@@ -351,7 +354,7 @@ windowSize = int(input("Enter window size: "))
 cv_image = cv2.imread("../capstone/images/40x40.png")
 image = cv_image[:, :, 0]
 print(type(image))
-r1 = PII.SWA(image,windowSize,"sum")
+r1 = PII.SWA(image,windowSize,"bob")
 print(r1)
 chunks,rows,cols = PII.SWA(image,windowSize,"sum",subImageSize=chunkSize)
 # r2 = PII.__reconstruct_image(chunks,rows,cols)
