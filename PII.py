@@ -47,6 +47,7 @@ class PII:
    
         """
 
+        # error checking
         if not isinstance(image,np.ndarray):
             raise TypeError("Invalid type for 'image'. Expected np.array.")
         if image.ndim != 2:
@@ -59,6 +60,10 @@ class PII:
             raise TypeError("Invalid type for 'subImageSize'. Expected int.")
         if subImageSize is not None and windowSize > subImageSize:
             raise ValueError("'SubImageSize' must be greater than 'windowSize'")
+        if image.shape[0] < windowSize or image.shape[1] < windowSize:
+            raise ValueError("Image dimensions must be greater than windowSize.")
+        if subImageSize is not None and (image.shape[0] < subImageSize or image.shape[1] < subImageSize):
+            raise ValueError("Image dimensions must be greater than subImageSize.")
         if not isinstance(GPU, bool):
             raise TypeError("Invalid type for 'GPU'. Expected bool.")
 
@@ -354,7 +359,7 @@ windowSize = int(input("Enter window size: "))
 cv_image = cv2.imread("../capstone/images/40x40.png")
 image = cv_image[:, :, 0]
 print(type(image))
-r1 = PII.SWA(image,windowSize,"bob")
+r1 = PII.SWA(image,windowSize,"sum")
 print(r1)
 chunks,rows,cols = PII.SWA(image,windowSize,"sum",subImageSize=chunkSize)
 # r2 = PII.__reconstruct_image(chunks,rows,cols)
