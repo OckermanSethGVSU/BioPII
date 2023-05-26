@@ -203,7 +203,7 @@ class PII:
         index = 0
 
         if reconstruct:
-            cv2.imwrite(f"{outDir}output.tif", PII.__reconstruct_image(chunks,numRows, numCols))
+            cv2.imwrite(f"{outDir}output.tif", PII.reconstruct_image(chunks,numRows, numCols))
         else:
             for i in range(numRows + 1):
                 for j in range(numCols+ 1):
@@ -280,12 +280,168 @@ class PII:
     
             return windowSum.get()
         
+
+
+    @staticmethod
+    def avg(matrix: np.ndarray, windowSize: int, GPU: bool = False) -> np.ndarray:
+        """
+        Perform integral image avg SWA on 2d matrix. Make sure you know what you are doing
+        if you are calling this outside of the SWA function - you should be able to do all 
+        you need with just SWA. 
+
+        Args:
+            matrix (np.ndarray): The input matrix as a NumPy array.
+            windowSize (int): The window size for the sum operation.
+            GPU (bool, optional): Flag indicating whether to use GPU for computation. Defaults to False.
+
+        Returns:
+            np.array: The result of the avg operation as a NumPy array.
+        """
+        if not isinstance(matrix, np.ndarray):
+            raise TypeError("Invalid type for 'matrix'. Expected np.array.")
+        if matrix.ndim != 2:
+            raise ValueError("Invalid shape for 'image'. Expected 2D array.")
+        if not isinstance(windowSize, int):
+            raise TypeError("Invalid type for 'windowSize'. Expected int.")
+        if not isinstance(GPU, bool):
+            raise TypeError("Invalid type for 'GPU'. Expected bool.")
+
+
+
+        if not GPU:
+            # calculate integral image
+            integralImage = np.cumsum(np.cumsum(matrix, axis=0), axis=1)
+            """
+             Pad the integral image so we don't lose any dimensionality, and then
+             compute the sum of each window using the integral image formula
+             
+             sum of bottom right + sum of top left - sum of button left - sum of top right
+             """
+            paddedIntegralImage = np.pad(integralImage, ((windowSize, 0), (windowSize, 0)), mode='constant')
+            windowSum = paddedIntegralImage[windowSize:, windowSize:] + paddedIntegralImage[:-windowSize, :-windowSize] - \
+                        paddedIntegralImage[windowSize:, :-windowSize] - paddedIntegralImage[:-windowSize, windowSize:]
+
+            # slice off extra from padding - may be causing an error with massive window sizes - need to check a few edge cases
+            windowSum = (windowSum[windowSize - 1:, windowSize - 1:]) / (windowSize * windowSize)
+            return windowSum
+
+        elif GPU:
+
+            
+            # convert to CUPY array and calculate the integral image
+            gpuMatrix = cp.asarray(matrix)
+            integralImage = cp.cumsum(cp.cumsum(gpuMatrix, axis=0), axis=1)
+            """
+            Pad the integral image so we don't lose any dimensionality, and then
+            compute the sum of each window using the integral image formula
+            
+            sum of bottom right + sum of top left - sum of button left - sum of top right
+            """
+            paddedIntegralImage = cp.pad(integralImage, ((windowSize, 0), (windowSize, 0)), mode='constant')
+            windowSum = paddedIntegralImage[windowSize:, windowSize:] + paddedIntegralImage[:-windowSize, :-windowSize] - \
+                        paddedIntegralImage[windowSize:, :-windowSize] - paddedIntegralImage[:-windowSize, windowSize:]
+
+            # slice off extra from padding - may be causing an error with massive window sizes - need to check a few edge cases
+            windowSum = (windowSum[windowSize - 1:, windowSize - 1:]) / (windowSize * windowSize)
+    
+            return windowSum.get()
+
+    @staticmethod
+    def std(matrix: np.ndarray, windowSize: int, GPU: bool = False) -> np.ndarray:
+        """
+        Perform integral image std SWA on 2d matrix. Make sure you know what you are doing
+        if you are calling this outside of the SWA function - you should be able to do all 
+        you need with just SWA. 
+
+        Args:
+            matrix (np.ndarray): The input matrix as a NumPy array.
+            windowSize (int): The window size for the sum operation.
+            GPU (bool, optional): Flag indicating whether to use GPU for computation. Defaults to False.
+
+        Returns:
+            np.array: The result of the avg operation as a NumPy array.
+        """
+        if not isinstance(matrix, np.ndarray):
+            raise TypeError("Invalid type for 'matrix'. Expected np.array.")
+        if matrix.ndim != 2:
+            raise ValueError("Invalid shape for 'image'. Expected 2D array.")
+        if not isinstance(windowSize, int):
+            raise TypeError("Invalid type for 'windowSize'. Expected int.")
+        if not isinstance(GPU, bool):
+            raise TypeError("Invalid type for 'GPU'. Expected bool.")
+
+
+
+        if not GPU:
+
+            # Compute summed area table
+            integralImage = np.cumsum(np.cumsum(matrix, axis=0), axis=1)
+
+            # calculate the average of each window
+            paddedIntegralImage = np.pad(integralImage, ((windowSize, 0), (windowSize, 0)), mode='constant')
+            windowSum = paddedIntegralImage[windowSize:, windowSize:] + paddedIntegralImage[:-windowSize, :-windowSize] - \
+                        paddedIntegralImage[windowSize:, :-windowSize] - paddedIntegralImage[:-windowSize, windowSize:]
+            temp = windowSum[windowSize - 1:, windowSize - 1:]
+            mean = temp / (windowSize ** 2)
+
+            # Get each of the windows into an array that we can subtract the mean from it
+            num_rows, num_cols = matrix.shape[0], matrix.shape[1]
+            num_valid_rows = np.maximum(0, num_rows - windowSize + 1)
+            num_valid_cols = np.maximum(0, num_cols - windowSize + 1)
+            shape = (num_valid_rows, num_valid_cols, windowSize, windowSize)
+            strides = matrix.strides * 2
+            windows = np.lib.stride_tricks.as_strided(matrix, shape=shape, strides=strides)
+
+            # square the differences and then add them up
+            sqr_diff = (windows - mean[:, :, np.newaxis, np.newaxis]) ** 2
+            sum_matrix = np.sum(sqr_diff, axis=(-2, -1))
+
+            # get the avg of each of those differences            
+            avg_sum_diffs = sum_matrix / (windowSize ** 2)
+
+            # sqrt to get std-dev
+            return np.sqrt(avg_sum_diffs)
+      
+            
+
+        elif GPU:
+            
+            # convert to GPU memory
+            gpuMatrix = cp.asarray(matrix)
+
+            # Compute summed area table
+            integralImage = cp.cumsum(np.cumsum(gpuMatrix, axis=0), axis=1)
+
+            # calculate the average of each window
+            paddedIntegralImage = cp.pad(integralImage, ((windowSize, 0), (windowSize, 0)), mode='constant')
+            windowSum = paddedIntegralImage[windowSize:, windowSize:] + paddedIntegralImage[:-windowSize, :-windowSize] - \
+                        paddedIntegralImage[windowSize:, :-windowSize] - paddedIntegralImage[:-windowSize, windowSize:]
+            temp = windowSum[windowSize - 1:, windowSize - 1:]
+            mean = temp / (windowSize ** 2)
+
+            # Get each of the windows into an array that we can subtract the mean from it
+            numRows, numCols = matrix.shape[0], matrix.shape[1]
+            numValidRows = cp.maximum(0, numRows - windowSize + 1)
+            numValidCols = cp.maximum(0, numCols - windowSize + 1)
+            shape = (numValidRows, numValidCols, windowSize, windowSize)
+            strides = gpuMatrix.strides * 2
+            windows = cp.as_strided(gpuMatrix, shape=shape, strides=strides)
+
+            # square the differences and then add them up
+            sqr_diff = (windows - mean[:, :, cp.newaxis, cp.newaxis]) ** 2
+            sum_matrix = np.sum(sqr_diff, axis=(-2, -1))
+
+            # get the avg of each of those differences            
+            avg_sum_diffs = sum_matrix / (windowSize ** 2)
+
+            # sqrt to get std-dev
+            return (cp.sqrt(avg_sum_diffs)).get()
       
 
     
 
     @staticmethod
-    def __reconstruct_image(chunks: [np.ndarray], rows: int, cols: int):
+    def reconstruct_image(chunks: [np.ndarray], rows: int, cols: int):
         """
         Reconstruct the image from the given chunks.
 
@@ -334,8 +490,12 @@ class PII:
         match analysisType:
             case "sum":
                 return PII.sum(image, windowSize,GPU=GPU)
+            case "avg":
+                return PII.avg(image,windowSize,GPU=GPU)
+            case "std":
+                return PII.std(image,windowSize,GPU=GPU)
             case _:
-                raise ValueError("Please provide a valid analysis type \nOptions: 'sum'")
+                raise ValueError("Please provide a valid analysis type \nOptions: 'sum','avg','std'")
 
     @staticmethod
     def __multi_image_integral_analysis(image,chunkSize,windowSize, analysisType,GPU=False):
@@ -345,9 +505,12 @@ class PII:
         match analysisType:
             case "sum":
                 return [PII.process_split_image("sum", windowSize,chunks,GPU=GPU),max_i,max_j]
-                
+            case "avg":
+                return [PII.process_split_image("avg", windowSize,chunks,GPU=GPU),max_i,max_j]
+            case "std":
+                return [PII.process_split_image("std",windowSize,chunks,GPU=GPU), max_i,max_j]
             case _:
-                raise ValueError("Please provide a valid analysis type \bOptions: 'sum'")
+                raise ValueError("Please provide a valid analysis type \nOptions: 'sum','avg','std'")
     
 
             
@@ -358,11 +521,16 @@ chunkSize = int(input("Enter chunk size: "))
 windowSize = int(input("Enter window size: "))
 cv_image = cv2.imread("../capstone/images/40x40.png")
 image = cv_image[:, :, 0]
-print(type(image))
-r1 = PII.SWA(image,windowSize,"sum")
-print(r1)
-chunks,rows,cols = PII.SWA(image,windowSize,"sum",subImageSize=chunkSize)
-# r2 = PII.__reconstruct_image(chunks,rows,cols)
-# print(r2)
+r1 = PII.SWA(image,windowSize,"std")
+# np.set_printoptions(threshold=np.inf)
 
-PII.save_split_image(chunks,rows,cols,"out/",reconstruct=True)
+print(r1)
+
+
+chunks,rows,cols = PII.SWA(image,windowSize,"std",subImageSize=chunkSize)
+r2 = PII.reconstruct_image(chunks,rows,cols)
+print(r2)
+
+print(r1 == r2)
+
+# PII.save_split_image(chunks,rows,cols,"out/",reconstruct=True)
