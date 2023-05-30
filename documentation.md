@@ -5,7 +5,7 @@ This section likely isn't perfect, but I did my best to explain everything and p
 
 ### SWA()
 
-Performs sliding window analysis on a 2D NumPy array. Currently, the only supported algorithm is "sum"
+Performs sliding window analysis on a 2D NumPy array. Currently, the supported algorithms are "sum", "avg", and "std"
 
 **Function Signature**
 ```python
@@ -31,14 +31,14 @@ Returns the result of applying sliding window analysis to the passed in image. I
 # no split, no GPU
 chunks,rows,cols = PII.SWA(image,500,"sum")
 
-# perform summing SWA on the target image with a window size of 250  
+# perform std SWA on the target image with a window size of 250  
 # and use the GPU - no split
-chunks,rows,cols = PII.SWA(image,250,"sum", GPU=True)
+chunks,rows,cols = PII.SWA(image,250,"std", GPU=True)
 
-# perform summing SWA on the target image with a window size of 250 
+# perform avg SWA on the target image with a window size of 250 
 # and split the image up into chunks of 10,000 that fit into my GPU 
 # memory
-chunks,rows,cols = PII.SWA(image,250,"sum", subImageSize=10000, GPU=True)
+chunks,rows,cols = PII.SWA(image,250,"avg", subImageSize=10000, GPU=True)
 ```
 
 ### save_split_image()
@@ -155,7 +155,6 @@ Perform integral image sum SWA on a 2D matrix. This function calculates the sum 
 *Notes*
 - Make sure you understand the purpose and usage of this function. It is typically used within the SWA function. It is recommended to use the SWA function directly for most use cases.
 
----
 
 **Example Usage:**
 
@@ -176,4 +175,84 @@ result = PII.sum(matrix, windowSize)
 result = PII.sum(matrix,windowSize,GPU=True)
 
 ```
+
+### std()
+
+**Function Signature**
+ `std(matrix: np.ndarray, windowSize: int, GPU: bool = False) -> np.ndarray`
+
+Perform integral image standard deviation SWA on a 2D matrix. This function calculates the sum of values within a sliding window of a specified size.
+
+**Parameters**
+- `matrix` (`np.ndarray`): The input matrix as a NumPy array.
+- `windowSize` (`int`): The window size for the sum operation.
+- `GPU` (`bool`, optional): Flag indicating whether to use GPU for computation. Defaults to `False`.
+
+**Returns**:
+- `np.array`: The result of the std operation as a NumPy array.
+
+*Notes*
+- Make sure you understand the purpose and usage of this function. It is typically used within the SWA function. It is recommended to use the SWA function directly for most use cases.
+
+
+
+**Example Usage:**
+
+```python
+import numpy as np
+
+# Create an example matrix
+matrix = np.array([[1, 2, 3],
+                   [4, 5, 6],
+                   [7, 8, 9]])
+
+windowSize = 2
+
+# std - no GPU
+result = PII.std(matrix, windowSize)
+
+# std - use GPU
+result = PII.std(matrix,windowSize,GPU=True)
+
+```
+
+### avg()
+
+**Function Signature**
+ `std(matrix: np.ndarray, windowSize: int, GPU: bool = False) -> np.ndarray`
+
+Perform integral image average SWA on a 2D matrix. This function calculates the sum of values within a sliding window of a specified size.
+
+**Parameters**
+- `matrix` (`np.ndarray`): The input matrix as a NumPy array.
+- `windowSize` (`int`): The window size for the sum operation.
+- `GPU` (`bool`, optional): Flag indicating whether to use GPU for computation. Defaults to `False`.
+
+**Returns**:
+- `np.array`: The result of the average operation as a NumPy array.
+
+*Notes*
+- Make sure you understand the purpose and usage of this function. It is typically used within the SWA function. It is recommended to use the SWA function directly for most use cases.
+
+
+**Example Usage:**
+
+```python
+import numpy as np
+
+# Create an example matrix
+matrix = np.array([[1, 2, 3],
+                   [4, 5, 6],
+                   [7, 8, 9]])
+
+windowSize = 2
+
+# avg - no GPU
+result = PII.avg(matrix, windowSize)
+
+# avg - use GPU
+result = PII.avg(matrix,windowSize,GPU=True)
+
+```
+
 

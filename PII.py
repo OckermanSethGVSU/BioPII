@@ -429,7 +429,7 @@ class PII:
 
             # square the differences and then add them up
             sqr_diff = (windows - mean[:, :, cp.newaxis, cp.newaxis]) ** 2
-            sum_matrix = np.sum(sqr_diff, axis=(-2, -1))
+            sum_matrix = cp.sum(sqr_diff, axis=(-2, -1))
 
             # get the avg of each of those differences            
             avg_sum_diffs = sum_matrix / (windowSize ** 2)
