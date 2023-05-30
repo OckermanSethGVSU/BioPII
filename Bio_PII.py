@@ -517,20 +517,20 @@ class PII:
             
             
 
-chunkSize = int(input("Enter chunk size: "))
-windowSize = int(input("Enter window size: "))
-cv_image = cv2.imread("../capstone/images/40x40.png")
-image = cv_image[:, :, 0]
-r1 = PII.SWA(image,windowSize,"std")
-# np.set_printoptions(threshold=np.inf)
+# chunkSize = int(input("Enter chunk size: "))
+# windowSize = int(input("Enter window size: "))
+# cv_image = cv2.imread("../capstone/images/40x40.png")
+# image = cv_image[:, :, 0]
+# r1 = PII.SWA(image,windowSize,"std")
+# # np.set_printoptions(threshold=np.inf)
 
-print(r1)
+# print(r1)
 
 
-chunks,rows,cols = PII.SWA(image,windowSize,"std",subImageSize=chunkSize)
-r2 = PII.reconstruct_image(chunks,rows,cols)
-print(r2)
+# chunks,rows,cols = PII.SWA(image,windowSize,"std",subImageSize=chunkSize)
+# r2 = PII.reconstruct_image(chunks,rows,cols)
+# print(r2)
 
-print(r1 == r2)
+# print(r1 == r2)
 
 # PII.save_split_image(chunks,rows,cols,"out/",reconstruct=True)
