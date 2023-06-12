@@ -14,11 +14,11 @@ The package name is prounounced bio-pie-squared :)
 ## Performance Numbers
 We tested our methods to determine its performance relative to past methods. We created a C++ SWA (refered to as DP-Naive) script which used dynamic programming to reduce the number of additions needed to be performed. DP-Naive SWA was already 400x faster than a naive approach (a simple 4 for loop approach) on small images and is used as the baseline for comparision to our bio-PII methods. 
 
-|                   | 30k by 30k | 30k by 30k Speedup | 40k by 50k | 40k by 50k Speedup | 50k by 65k | 50k by 60k Speedup |
+|                   | 30k by 30k | 30k by 30k Speedup | 40k by 50k | 40k by 50k Speedup | 60k by 60k | 60k by 60k Speedup |
 |-------------------|------------|--------------------|------------|--------------------|------------|--------------------|
-| **DP-Naive**      | 211,381,433| N/A                | 491,374,150| N/A                | TODO       | N/A                |
-| **II**            | 56,693     | 3728x              | 714,857    | 687x               | 896,572    | TODO               |
-| **PII**           | 55,976     | 3776x              | 84,833     | 5792x              | 151,796    | TODO               |
+| **DP-Naive**      | 211,381,433| N/A                | 491,374,150| N/A                | 943,858,845     | N/A                |
+| **II**            | 56,693     | 3728x              | 253,082    | 1942x               | 319,666    | 2953x               |
+| **PII**           | 20,137     | 10,497x             | 46,532     | 10,559x             | 86,583    | 10,901x            |
 
 *Note: SWA runtime in milliseconds on different image sizes; speedups relative to DP-Naive Solution*
 

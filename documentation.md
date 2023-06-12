@@ -1,8 +1,8 @@
-# Documentation for bio_PII
+# Documentation for BioPII
 
 This section likely isn't perfect, but I did my best to explain everything and provide helpful examples. 
 
-To use the package include the following statement at the top of your file: `from Bio_PII import PII`
+To use the package include the following statement at the top of your file: `from BioPII import PII`
 
 ### SWA()
 
