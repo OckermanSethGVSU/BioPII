@@ -1,13 +1,14 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='Bio-PII',
-    version='0.1.0',
+    name='BioPII',
+    version='0.1.2',
     author='Seth Ockerman',
     author_email='ockermas@mail.gvsu.edu',
-    description='Bio-PII (Biology Parallel Integral Image) is a Python package for performing sliding window analysis (SWA) on biological images.',
+    description='BioPII (Biology Parallel Integral Image) is a Python package for performing sliding window analysis (SWA) on biological images.',
     url='https://github.com/OckermanSethGVSU/Bio-PII',
     packages=find_packages(),
+    py_modules=['BioPII'],
     classifiers=[
         'License :: OSI Approved :: MIT License',
         'Environment :: GPU :: NVIDIA CUDA',
@@ -21,7 +22,9 @@ setup(
     install_requires=[
         'numpy',
         'opencv-python',
-        'cupy',
     ],
+      extras_require={
+        'GPU-Support': ['cupy']
+    },
 )
 
