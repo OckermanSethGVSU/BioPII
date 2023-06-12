@@ -2,11 +2,11 @@ from setuptools import setup, find_packages
 
 setup(
     name='BioPII',
-    version='0.1.2',
+    version='0.1.3',
     author='Seth Ockerman',
     author_email='ockermas@mail.gvsu.edu',
     description='BioPII (Biology Parallel Integral Image) is a Python package for performing sliding window analysis (SWA) on biological images.',
-    url='https://github.com/OckermanSethGVSU/Bio-PII',
+    url='https://github.com/OckermanSethGVSU/BioPII',
     packages=find_packages(),
     py_modules=['BioPII'],
     classifiers=[
