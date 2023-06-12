@@ -12,13 +12,13 @@ This code and package is under the MIT License - copyright (c) Seth Ockerman
 The package name is prounounced bio-pie-squared :)
 
 ## Performance Numbers
-We tested our methods to determine its performance relative to past methods. We created a C++ SWA (refered to as DP-Naive) script which used dynamic programming to reduce the number of additions needed to be performed. DP-Naive SWA was already 400x faster than a naive approach (a simple 4 for loop approach) on small images and is used as the baseline for comparision to our bio-PII methods. 
+We tested our methods to determine its performance relative to past methods. We created a C++ SWA (referred to as DP-Naive) script which used dynamic programming to reduce the number of additions needed to be performed. DP-Naive SWA was already 400x faster than a naive approach (a simple four for loop approach) on small images and is used as the baseline for comparison to our integral-image-based methods. 
 
 |                   | 30k by 30k | 30k by 30k Speedup | 40k by 50k | 40k by 50k Speedup | 60k by 60k | 60k by 60k Speedup |
 |-------------------|------------|--------------------|------------|--------------------|------------|--------------------|
 | **DP-Naive**      | 211,381,433| N/A                | 491,374,150| N/A                | 943,858,845     | N/A                |
-| **II**            | 56,693     | 3728x              | 253,082    | 1942x               | 319,666    | 2953x               |
-| **PII**           | 20,137     | 10,497x             | 46,532     | 10,559x             | 86,583    | 10,901x            |
+| **Integral Image**            | 56,693     | 3728x              | 253,082    | 1942x               | 319,666    | 2953x               |
+| **Parallel Integral Image**           | 20,137     | 10,497x             | 46,532     | 10,559x             | 86,583    | 10,901x            |
 
 *Note: SWA runtime in milliseconds on different image sizes; speedups relative to DP-Naive Solution*
 
@@ -33,7 +33,7 @@ We tested our methods to determine its performance relative to past methods. We 
 
 ## Installation
 
-You can install bio PII using pip:
+You can install BioPII using pip:
 
 ``` pip3 install BioPII ```
 
