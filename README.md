@@ -1,8 +1,8 @@
-# Bio_PII
+# BioPII
 
-Bio_PII (Biology Parallel Integral Image) is a Python package for performing sliding window analysis (SWA) on biological images. This package makes use of the integral image technique to drastically speedup SWA, enabling SWA analysis of images that would have been too large for previous SWA implementations. 
+BioPII (Biology Parallel Integral Image) is a Python package for performing sliding window analysis (SWA) on biological images. This package makes use of the integral image technique to drastically speedup SWA, enabling SWA analysis of images that would have been too large for previous SWA implementations. 
 
-To use the package include the following statement at the top of your file: `from Bio_PII import PII`
+To use the package include the following statement at the top of your file: `from BioPII import PII`
 
 To cite this package, cite our [IEEE CIBCB 2023 short paper](TODO). 
 
@@ -35,7 +35,7 @@ We tested our methods to determine its performance relative to past methods. We 
 
 You can install bio PII using pip:
 
-``` pip3 install Bio_PII ```
+``` pip3 install BioPII ```
 
 ## Documentation
 Documentation can be found internally within our code and in the [documentation file](./documentation.md).  
