@@ -1,5 +1,5 @@
 import numpy as np
-# import cupy as cp
+import cupy as cp
 import os
 os.environ["OPENCV_IO_MAX_IMAGE_PIXELS"] = str(pow(2,40))
 import cv2
