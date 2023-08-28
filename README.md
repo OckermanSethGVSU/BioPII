@@ -11,7 +11,7 @@ This code and package is under the MIT License - copyright (c) Seth Ockerman
 The package name is prounounced bio-pie :)
 
 ## Performance Numbers
-We tested our methods to determine its performance relative to past methods. We created a C++ SWA (referred to as DP-Naive) script which used dynamic programming to reduce the number of additions needed to be performed. DP-Naive SWA was already 400x faster than a naive approach (a simple four for loop approach) on small images and is used as the baseline for comparison to our integral-image-based methods. 
+We tested our summing SWA to determine its performance relative to past methods. We created a C++ SWA (referred to as DP-Naive) script which used dynamic programming to reduce the number of additions needed to be performed. DP-Naive SWA was already 400x faster than a naive approach (a simple four for loop approach) on small images and is used as the baseline for comparison to our integral-image-based methods. 
 
 |                   | 30k by 30k | 30k by 30k Speedup | 40k by 50k | 40k by 50k Speedup | 60k by 60k | 60k by 60k Speedup |
 |-------------------|------------|--------------------|------------|--------------------|------------|--------------------|
@@ -38,3 +38,7 @@ You can install BioPII using pip:
 
 ## Documentation
 Documentation can be found internally within our code and in the [documentation file](./documentation.md).  
+
+
+### Note
+The average-SWA-algorithm and std-deviation-SWA algorithm have not been as tested as extensively as the sum-SWA-algorithm. If you discover a bug, please reach out to [sockerman@cs.wisc.edu](mailto:sockerman@cs.wisc.edu).
