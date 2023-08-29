@@ -4,7 +4,7 @@ BioPII (Biology Parallel Integral Image) is a Python package for performing slid
 
 To use the package include the following statement at the top of your file: `from BioPII import PII`
 
-To cite this package, cite our [IEEE CIBCB 2023 short paper](https://cmte.ieee.org/cis-bbtc/wp-content/uploads/sites/172/IEEE_CIBCB_2023_paper_2015.pdf){:target="_blank"}. As soon as the linked is posted, I will update the link to actually go to the paper :). 
+To cite this package, cite our [IEEE CIBCB 2023 short paper](https://cmte.ieee.org/cis-bbtc/wp-content/uploads/sites/172/IEEE_CIBCB_2023_paper_2015.pdf).
 
 This code and package is under the MIT License - copyright (c) Seth Ockerman
 

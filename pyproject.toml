@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [tool.poetry]
 name = "BioPII"
-version = "0.2.0"
+version = "0.2.3"
 authors = ["Seth Ockerman <ockermas@mail.gvsu.edu>"]
 description = "BioPII (Biology Parallel Integral Image) is a Python package for performing sliding window analysis (SWA) on biological images."
 homepage = "https://github.com/OckermanSethGVSU/BioPII"
