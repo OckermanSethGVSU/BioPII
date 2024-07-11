@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: BioPII
-Version: 0.2.3
+Version: 0.2.4
 Summary: BioPII (Biology Parallel Integral Image) is a Python package for performing sliding window analysis (SWA) on biological images.
 Home-page: https://github.com/OckermanSethGVSU/BioPII
 Author: Seth Ockerman
@@ -14,7 +14,10 @@ Classifier: Programming Language :: Python :: 3.6
 Classifier: Programming Language :: Python :: 3.7
 Classifier: Programming Language :: Python :: 3.8
 Description-Content-Type: text/markdown
-Provides-Extra: GPU-Support
+Requires-Dist: numpy
+Requires-Dist: opencv-python
+Provides-Extra: gpu-support
+Requires-Dist: cupy; extra == "gpu-support"
 
 # BioPII
 
@@ -22,7 +25,7 @@ BioPII (Biology Parallel Integral Image) is a Python package for performing slid
 
 To use the package include the following statement at the top of your file: `from BioPII import PII`
 
-To cite this package, cite our [IEEE CIBCB 2023 short paper](https://cmte.ieee.org/cis-bbtc/wp-content/uploads/sites/172/IEEE_CIBCB_2023_paper_2015.pdf).
+To cite this package, cite our [IEEE CIBCB 2023 short paper](https://www.researchgate.net/publication/382174274_Accelerating_Biological_Spatial_Cluster_Analysis_with_the_Parallel_Integral_Image_Technique).
 
 This code and package is under the MIT License - copyright (c) Seth Ockerman
 

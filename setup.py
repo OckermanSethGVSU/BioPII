@@ -5,7 +5,7 @@ with open('README.md', 'r') as f:
 
 setup(
     name='BioPII',
-    version='0.2.3',
+    version='0.2.4',
     author='Seth Ockerman',
     author_email='ockermas@mail.gvsu.edu',
     description='BioPII (Biology Parallel Integral Image) is a Python package for performing sliding window analysis (SWA) on biological images.',
